@@ -62,13 +62,12 @@ const ProductStockList = ({ item, index, deleteProduct }) => {
 
       <View
         className={
-          showModal === true ? "p-4 border-2 border-red-500 rounded" : "p-4 bg-white rounded-xl"
+          showModal === true
+            ? "p-4 border-2 border-red-500 rounded"
+            : "p-4 bg-white rounded-xl"
         }
       >
-        <TouchableOpacity
-          onLongPress={() => setShowModal(true)}
-          className="px-5"
-        >
+        <TouchableOpacity onLongPress={() => setShowModal(true)} className="">
           <Animated.View
             style={{
               opacity: fadeAnim,
@@ -82,8 +81,8 @@ const ProductStockList = ({ item, index, deleteProduct }) => {
               ],
             }}
           >
-            <View className="flex flex-row justify-between gap-5">
-              <View className="flex-1 justify-center items-start">
+            <View className="flex flex-row">
+              <View className="justify-center w-1/5">
                 <Image
                   className="rounded"
                   style={{
@@ -99,16 +98,32 @@ const ProductStockList = ({ item, index, deleteProduct }) => {
                 />
               </View>
 
-              <View className="flex-1 justify-center items-start">
+              <View className="justify-center w-2/5">
                 <Text className="" numberOfLines={2} ellipsizeMode="tail">
                   {item.name}
                 </Text>
               </View>
 
-              <View className="flex-1 justify-center items-end">
+              <View className="justify-center w-1/5 ">
                 <Text className="" numberOfLines={1} ellipsizeMode="tail">
                   {item.stock}
                 </Text>
+              </View>
+
+              <View className="justify-center w-1/5">
+                {item.stock <= 0 ? (
+                  <View className="bg-red-100 rounded-full">
+                    <Text className="text-center text-red-500">No Stock</Text>
+                  </View>
+                ) : item.stock <= 10 ? (
+                  <View className="bg-amber-100 rounded-full">
+                    <Text className="text-center text-amber-500">Low Stock</Text>
+                  </View>
+                ) : (
+                  <View className="bg-green-100 rounded-full">
+                    <Text className="text-center text-green-500">In Stock</Text>
+                  </View>
+                )}
               </View>
             </View>
           </Animated.View>

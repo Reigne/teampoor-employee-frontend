@@ -1,25 +1,73 @@
-import React, { useContext } from "react";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { View, Text } from "react-native";
+import React, { useContext, useEffect } from "react";
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/FontAwesome";
-import AuthGlobal from "../Context/Store/AuthGlobal";
-import {
-  ClipboardDocumentListIcon,
-  PresentationChartBarIcon,
-  Squares2X2Icon,
-  UserCircleIcon,
-} from "react-native-heroicons/solid";
 
 //navigators
 import UserNavigator from "../Navigators/UserNavigator";
 import AdminNavigator from "./AdminNavigator";
 import SupperlierDrawerNavigation from "./SupplierDrawerNavigator";
 import MechanicNavigator from "./MechanicNavigator";
+// import Notifications from "../Screens/Notification/Notifications";
+import NotificationIcon from "../Shared/NotificationIcon";
+import NotificationsAdmin from "../Screens/Admin/Notifications";
+
+import AuthGlobal from "../Context/Store/AuthGlobal";
+import {
+  BellIcon,
+  ClipboardDocumentIcon,
+  ClipboardDocumentListIcon,
+  PresentationChartBarIcon,
+  UserCircleIcon,
+  Squares2X2Icon,
+} from "react-native-heroicons/solid";
+import baseURL from "../assets/common/baseUrl";
+import * as actions from "../Redux/Actions/notificationActions";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 const Tab = createBottomTabNavigator();
 
+const getRouteName = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route);
+  console.log(routeName);
+
+  if (routeName?.includes("Login") || routeName?.includes("Register")) {
+    return "none";
+  }
+
+  return "flex";
+};
+
 const Main = () => {
   const context = useContext(AuthGlobal);
+  // const dispatch = useDispatch();
+
+  // if (context.stateUser.user.role === "user") {
+  //   useEffect(() => {
+  //     axios
+  //       .get(`${baseURL}notifications/unread/${context.stateUser.user.userId}`)
+  //       .then((res) => {
+  //         dispatch(actions.fetchUnreadCountSuccess(res.data.unreadCount)); // Dispatch action to update Redux store
+  //       })
+  //       .catch((error) => console.log(error));
+  //   }, []);
+  // }
+
+  const getRouteName = (route) => {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    console.log(routeName);
+
+    if (routeName?.includes("Login") || routeName?.includes("Register")) {
+      return "none";
+    }
+
+    return "flex";
+  };
 
   return (
     <Tab.Navigator
@@ -30,7 +78,8 @@ const Main = () => {
         tabBarActiveTintColor: "#ef4444",
       }}
     >
-      {context.stateUser.user.role === "admin" && (
+      {(context.stateUser.user.role === "admin" ||
+        context.stateUser.user.role === "secretary") && (
         <Tab.Screen
           name="Admin"
           component={AdminNavigator}
@@ -102,19 +151,25 @@ const Main = () => {
           }, // Fix this line
         })}
       />
+
+      {(context.stateUser.user.role === "admin" ||
+        context.stateUser.user.role === "secretary") && (
+        <Tab.Screen
+          name="NotificationsAdmin"
+          component={NotificationsAdmin}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color }) => (
+              <NotificationIcon
+                color={color}
+                userId={context.stateUser?.user?.userId}
+              />
+            ),
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
-};
-
-const getRouteName = (route) => {
-  const routeName = getFocusedRouteNameFromRoute(route);
-  console.log(routeName);
-
-  if (routeName?.includes("Login") || routeName?.includes("Register")) {
-    return "none";
-  }
-
-  return "flex";
 };
 
 export default Main;

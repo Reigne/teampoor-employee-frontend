@@ -38,6 +38,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
+
 const AppointmentParts = (props) => {
   const item = props.route.params;
   const navigation = useNavigation();
@@ -53,7 +54,6 @@ const AppointmentParts = (props) => {
     calculateTotalPrice(productInputs);
   }, [productInputs]);
 
-  
   useEffect(() => {
     fetchProducts();
 
@@ -113,6 +113,7 @@ const AppointmentParts = (props) => {
     image: product.images[0]?.url || "",
     price: product.price,
     stock: product.stock,
+    brand: product.brand.name,
   }));
 
   const handleProductChange = (product) => {
@@ -128,6 +129,7 @@ const AppointmentParts = (props) => {
           name: selectedProduct.label,
           id: selectedProduct.value,
           price: selectedProduct.price,
+          brand: selectedProduct.brand
         },
       ]);
       setSelectedProduct(null);
@@ -211,7 +213,9 @@ const AppointmentParts = (props) => {
             }}
             alt="images"
           />
-          <Text style={styles.textItem}>{product.label}</Text>
+          <Text style={styles.textItem}>
+            {product.label} ({product.brand})
+          </Text>
         </View>
         {/* {product.value === selectedMechanic && <CheckIcon size={3} />} */}
       </View>
@@ -254,32 +258,33 @@ const AppointmentParts = (props) => {
         <View className="space-y-1">
           <Text>Select Product</Text>
 
-          <View className="flex flex-row items-center space-x-3">
-            <View className="space-y-1 w-9/12">
-              <View className="bg-zinc-100 rounded-xl px-2 py-1">
-                <Dropdown
-                  placeholderStyle={styles.placeholderStyle}
-                  selectedTextStyle={styles.selectedTextStyle}
-                  inputSearchStyle={styles.inputSearchStyle}
-                  iconStyle={styles.iconStyle}
-                  data={productData}
-                  search
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  placeholder="Search product"
-                  searchPlaceholder="Search..."
-                  value={selectedProduct}
-                  onChange={(product) => {
-                    handleProductChange(product);
-                  }}
-                  // renderLeftIcon={() => (
-                  //   <UserIcon style={styles.icon} size={15} color="black" />
-                  // )}
-                  renderItem={renderProduct}
-                />
-              </View>
+          <View className="space-y-2">
+            <View className="bg-zinc-100 rounded-xl px-2 py-1">
+              <Dropdown
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={productData}
+                search
+                dropdownPosition="top"
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder="Search product"
+                searchPlaceholder="Search..."
+                value={selectedProduct}
+                onChange={(product) => {
+                  handleProductChange(product);
+                }}
+                // renderLeftIcon={() => (
+                //   <UserIcon style={styles.icon} size={15} color="black" />
+                // )}
+                renderItem={renderProduct}
+              />
             </View>
+
+            <View></View>
 
             <View>
               <TouchableOpacity
@@ -319,7 +324,7 @@ const AppointmentParts = (props) => {
                         className="bg-zinc-100 p-2 rounded-xl"
                         placeholder="Product Name"
                         placeholderTextColor="black"
-                        value={product.name}
+                        value={product.name + " (" + product.brand + ")"}
                         editable={false} // Make the input field readonly
                       />
                     </View>

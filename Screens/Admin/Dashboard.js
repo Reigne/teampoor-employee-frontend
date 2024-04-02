@@ -29,12 +29,19 @@ import Toast from "react-native-toast-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   ArchiveBoxIcon,
+  CalendarDaysIcon,
+  CheckBadgeIcon,
   MagnifyingGlassCircleIcon,
+  Squares2X2Icon,
+  TruckIcon,
+  UserGroupIcon,
+  WrenchScrewdriverIcon,
   XMarkIcon,
 } from "react-native-heroicons/solid";
 import { BarChart, LineChart } from "react-native-gifted-charts";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
+import { faMotorcycle } from "@fortawesome/free-solid-svg-icons/faMotorcycle";
 
 const Dashboard = () => {
   const [totalProduct, setTotalProduct] = useState(null);
@@ -47,6 +54,7 @@ const Dashboard = () => {
   const [totalMotorcycles, setTotalMotorcycles] = useState(null);
   const [productStocks, setProductStocks] = useState([]);
   const [chartOrders, setChartOrders] = useState([]);
+  const [mostPurchasedProduct, setMostPurchasedProduct] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -64,12 +72,24 @@ const Dashboard = () => {
       fetchTotalMotorcycles();
       fetchProductStocks();
       fetchTotalOrderCharts();
+      fetchMostPurchasedProduct();
 
       return () => {
         // setAppointments([]);
       };
     }, [])
   );
+
+  const fetchMostPurchasedProduct = async () => {
+    try {
+      const response = await axios.get(
+        `${baseURL}dashboards/most-purchased-product`
+      );
+      setMostPurchasedProduct(response.data.mostPurchasedProducts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchTotalProducts = async () => {
     axios
@@ -174,6 +194,12 @@ const Dashboard = () => {
     frontColor: getColor(index), // Assigning color based on index
   }));
 
+  const mostPurchasedBarData = mostPurchasedProduct?.map((item, index) => ({
+    value: item.sold,
+    label: item.productName,
+    frontColor: getColor(index), // Assigning color based on index
+  }));
+
   const formatMonth = (dateString) => {
     const date = new Date(dateString);
     const month = date.toLocaleString("default", { month: "short" }); // Get abbreviated month name like "Jan"
@@ -187,7 +213,7 @@ const Dashboard = () => {
     label: formatMonth(order._id), // Format the date
   }));
 
-  console.log(orderLineData, "orderLineData");
+  console.log(mostPurchasedProduct, "orderLineData");
 
   const fetchProductStocks = async () => {
     try {
@@ -219,7 +245,7 @@ const Dashboard = () => {
   // };
 
   return (
-    <KeyboardAwareScrollView className="flex-1 bg-slate-100 p-3 space-y-3">
+    <KeyboardAwareScrollView className="flex-1 bg-zinc-100 p-3 space-y-3">
       {/* <Text>Dashboard</Text> */}
 
       <View className="space-y-1 flex-1 flex-row flex-wrap justify-between items-center ">
@@ -235,7 +261,7 @@ const Dashboard = () => {
 
         <View className="w-1/2 border-2 border-white flex flex-row bg-amber-500 rounded-xl p-3 items-center space-x-3">
           <View className="bg-amber-400 p-2 rounded-lg">
-            <ArchiveBoxIcon color="white" size={24} />
+            <WrenchScrewdriverIcon color="white" size={24} />
           </View>
           <View className="flex-1 flex-col">
             <Text className="font-semibold text-white">Total Services</Text>
@@ -245,7 +271,7 @@ const Dashboard = () => {
 
         <View className="w-1/2 border-2 border-white flex flex-row bg-red-500 rounded-xl p-3 items-center space-x-3">
           <View className="bg-red-400 p-2 rounded-lg">
-            <ArchiveBoxIcon color="white" size={24} />
+            <CheckBadgeIcon color="white" size={24} />
           </View>
           <View className="flex-1 flex-col">
             <Text className="font-semibold text-white">Total Brands</Text>
@@ -255,7 +281,7 @@ const Dashboard = () => {
 
         <View className="w-1/2 border-2 border-white flex flex-row bg-violet-500 rounded-xl p-3 items-center space-x-3">
           <View className="bg-violet-400 p-2 rounded-lg">
-            <ArchiveBoxIcon color="white" size={24} />
+            <Squares2X2Icon color="white" size={24} />
           </View>
           <View className="flex-1 flex-col">
             <Text className="font-semibold text-white text-xs">
@@ -267,7 +293,7 @@ const Dashboard = () => {
 
         <View className="w-1/2 border-2 border-white flex flex-row bg-amber-500 rounded-xl p-3 items-center space-x-3">
           <View className="bg-amber-400 p-2 rounded-lg">
-            <ArchiveBoxIcon color="white" size={24} />
+            <CalendarDaysIcon color="white" size={24} />
           </View>
           <View className="flex-1 flex-col">
             <Text className="font-semibold text-white text-xs">
@@ -281,7 +307,7 @@ const Dashboard = () => {
 
         <View className="w-1/2 border-2 border-white flex flex-row bg-red-500 rounded-xl p-3 items-center space-x-3">
           <View className="bg-red-400 p-2 rounded-lg">
-            <ArchiveBoxIcon color="white" size={24} />
+            <TruckIcon color="white" size={24} />
           </View>
           <View className="flex-1 flex-col">
             <Text className="font-semibold text-white">Orders</Text>
@@ -291,7 +317,7 @@ const Dashboard = () => {
 
         <View className="w-1/2 border-2 border-white flex flex-row bg-violet-500 rounded-xl p-3 items-center space-x-3">
           <View className="bg-violet-400 p-2 rounded-lg">
-            <ArchiveBoxIcon color="white" size={24} />
+            <UserGroupIcon color="white" size={24} />
           </View>
           <View className="flex-1 flex-col">
             <Text className="font-semibold text-white">Users</Text>
@@ -301,7 +327,7 @@ const Dashboard = () => {
 
         <View className="w-1/2 border-2 border-white flex flex-row bg-blue-500 rounded-xl p-3 items-center space-x-3">
           <View className="bg-blue-400 p-2 rounded-lg">
-            <ArchiveBoxIcon color="white" size={24} />
+          <FontAwesomeIcon icon={faMotorcycle} color="white"  size={24} />
           </View>
           <View className="flex-1 flex-col">
             <Text className="font-semibold text-white">Motorcycles</Text>
@@ -310,7 +336,6 @@ const Dashboard = () => {
         </View>
       </View>
 
-     
       <View className="bg-white rounded-xl p-3 overflow-hidden ">
         <View className="mb-2">
           <Text className="text-xl font-semibold">Products</Text>
@@ -348,7 +373,7 @@ const Dashboard = () => {
         {/* <View className="p-5">{renderLegendComponent()}</View> */}
       </View>
 
-      <View className="bg-white rounded-xl p-3 overflow-hidden mb-5">
+      <View className="bg-white rounded-xl p-3 overflow-hidden">
         <View className="mb-2">
           <Text className="text-xl font-semibold">Orders</Text>
           <Text className="text-xs ">Total orders per day</Text>
@@ -430,6 +455,40 @@ const Dashboard = () => {
               );
             },
           }}
+        />
+      </View>
+
+      <View className="bg-white rounded-xl p-3 overflow-hidden mb-5">
+        <View className="mb-2">
+          <Text className="text-xl font-semibold">Products</Text>
+          <Text className="text-xs ">Most Purchased Product</Text>
+        </View>
+        <BarChart
+          barWidth={22}
+          barBorderRadius={4}
+          frontColor="lightgray"
+          data={mostPurchasedBarData}
+          yAxisThickness={0}
+          xAxisThickness={0}
+          noOfSections={8}
+          onPress={(item, index) =>
+            toast.show({
+              render: () => {
+                return (
+                  <View className="bg-zinc-600 p-2 rounded-full flex flex-row items-center space-x-2">
+                    <FontAwesomeIcon
+                      icon={faCircle}
+                      color={item.frontColor}
+                      size={12}
+                    />
+                    <Text className="text-white text-xs">
+                      {item.label} ({item.value})
+                    </Text>
+                  </View>
+                );
+              },
+            })
+          }
         />
       </View>
     </KeyboardAwareScrollView>

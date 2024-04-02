@@ -164,7 +164,7 @@ const Login = (props) => {
               </View>
 
               <TouchableOpacity className="flex items-end mb-5">
-                <Text className="text-gray-400">Forgot Password?</Text>
+                {/* <Text className="text-gray-400">Forgot Password?</Text> */}
               </TouchableOpacity>
 
               {/* <Text>{error ? <Error message={error} /> : null}</Text> */}

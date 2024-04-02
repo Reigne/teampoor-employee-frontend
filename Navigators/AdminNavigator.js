@@ -14,6 +14,9 @@ import ProductStockNavigator from "./ProductStockNavigator";
 import ProductStockLogs from "../Screens/Admin/ProductStockLogs";
 import AppointmentNavigator from "./AppointmentNavigator";
 import DashboardNavigator from "./DashboardNavigator";
+import FeedbackNavigator from "./FeedbackNavigator";
+import ProductPriceLogs from "../Screens/Admin/ProductPriceLogs";
+import SupplierLogNavigator from "./SupplierLogNavigator";
 
 import AuthGlobal from "../Context/Store/AuthGlobal";
 import { Squares2X2Icon } from "react-native-heroicons/solid";
@@ -37,27 +40,17 @@ function MyStack() {
           // marginLeft: -20,
         },
       }}
-      drawerContent={(props) => <AdminDrawerCustom {...props} activeColor={activeColor} />}
+      drawerContent={(props) => (
+        <AdminDrawerCustom {...props} activeColor={activeColor} />
+      )}
     >
       {/* {context.stateUser.user.role === "admin" ? (
         <> */}
       <Drawer.Screen
         name="DashboardNavigator"
         component={DashboardNavigator}
-        // options={{
-        //   title: "Dashboard",
-        // }}
-
         options={{
           title: "Dashboard",
-          drawerIcon: ({ color }) => (
-            <Squares2X2Icon
-              name="cog"
-              style={{ position: "relative" }}
-              color={color}
-              size={24}
-            />
-          ),
         }}
       />
       <Drawer.Screen
@@ -144,6 +137,27 @@ function MyStack() {
         component={AppointmentNavigator}
         options={{
           title: "Appointments",
+        }}
+      />
+      <Drawer.Screen
+        name="FeedbackNavigator"
+        component={FeedbackNavigator}
+        options={{
+          title: "Mechanic Feedback",
+        }}
+      />
+      <Drawer.Screen
+        name="ProductPriceLogs"
+        component={ProductPriceLogs}
+        options={{
+          title: "Product Price Logs",
+        }}
+      />
+      <Drawer.Screen
+        name="SupplierLogNavigator"
+        component={SupplierLogNavigator}
+        options={{
+          title: "Supplier Logs",
         }}
       />
       {/* </>

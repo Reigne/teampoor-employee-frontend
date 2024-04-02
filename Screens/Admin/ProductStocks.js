@@ -118,15 +118,18 @@ const ProductStocks = (props) => {
         className="p-5 bg-red-500 rounded-xl"
         // style={{ borderBottomWidth: 0.5, borderBottomColor: "gray" }}
       >
-        <View className="flex flex-row justify-between gap-5">
-          <View className="justify-center items-center">
+        <View className="flex flex-row">
+          <View className="justify-center items-start w-1/5">
             <Text className="font-bold text-white">Image</Text>
           </View>
-          <View className="justify-center items-center">
+          <View className="justify-center items-start w-2/5">
             <Text className="font-bold text-white">Name</Text>
           </View>
-          <View className="justify-center items-center">
+          <View className="justify-center items-start  w-1/5">
             <Text className="font-bold text-white">Stock</Text>
+          </View>
+          <View className="justify-center items-start w-1/5">
+            <Text className="font-bold text-white">Status</Text>
           </View>
         </View>
       </View>
@@ -145,13 +148,13 @@ const ProductStocks = (props) => {
         </View>
       </View>
 
-      <View className="mb-20 mt-2 ">
+      <View className="mt-2 flex-1">
         {loading === true ? (
           <View className="flex justify-center items-center">
             <ActivityIndicator size="large" color="red" />
           </View>
         ) : (
-          <View className="px-2">
+          <View className="flex-1 px-2">
             {/* { productFilter.length > 0 ? ( */}
             <View className="rounded-lg">
               <FlatList
@@ -175,7 +178,6 @@ const ProductStocks = (props) => {
                 keyExtractor={(item) => item.id}
               />
             </View>
-
           </View>
         )}
       </View>

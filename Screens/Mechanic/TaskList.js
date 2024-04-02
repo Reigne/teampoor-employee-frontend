@@ -138,7 +138,7 @@ const TaskList = ({ item }) => {
       </View>
 
       <View className="p-2 bg-zinc-200 rounded-lg space-y-2">
-        {item.appointmentService.map((service, index) => (
+        {item.appointmentServices.map((service, index) => (
           <View className="flex flex-row space-x-2 items-center">
             <Image
               className="rounded"

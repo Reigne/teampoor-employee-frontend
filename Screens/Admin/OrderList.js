@@ -58,6 +58,8 @@ const OrderList = ({ item, updateStatus }) => {
                         ? "info"
                         : selectedStatus === "TOSHIP"
                         ? "info"
+                        : selectedStatus === "PAID"
+                        ? "success"
                         : selectedStatus === "TORECEIVED"
                         ? "info"
                         : selectedStatus === "FAILEDATTEMPT"
@@ -80,7 +82,9 @@ const OrderList = ({ item, updateStatus }) => {
                       ? "To Pay"
                       : selectedStatus === "TOSHIP"
                       ? "To Ship"
-                      : selectedStatus === "TORECEIVE"
+                      : selectedStatus === "PAID"
+                      ? "Paid"
+                      : selectedStatus === "TORECEIVED"
                       ? "Out for Delivery"
                       : selectedStatus === "FAILEDATTEMPT"
                       ? "Failed Attempt"
@@ -302,7 +306,7 @@ const OrderList = ({ item, updateStatus }) => {
               {/* <Select.Item label="Pending" value="Pending" /> */}
               <Select.Item label="To Pay" value="TOPAY" />
               <Select.Item label="To Ship" value="TOSHIP" />
-              <Select.Item label="Out for Delivery" value="TORECEIVE" />
+              <Select.Item label="Out for Delivery" value="TORECEIVED" />
               <Select.Item
                 label="Unsuccessful Delivery Attempt"
                 value="FAILEDATTEMPT"

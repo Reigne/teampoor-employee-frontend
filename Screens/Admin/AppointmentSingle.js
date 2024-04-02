@@ -19,6 +19,7 @@ import {
 } from "native-base";
 import {
   BanknotesIcon,
+  CalendarDaysIcon,
   ChevronDownIcon,
   DocumentTextIcon,
   MapPinIcon,
@@ -39,6 +40,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const AppointmentSingle = (props) => {
   const appointmentID = props.route.params;
@@ -48,6 +50,7 @@ const AppointmentSingle = (props) => {
 
   const [item, setItem] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const [value, setValue] = useState(null);
   const [status, setStatus] = useState();
   const [selectedStatus, setSelectedStatus] = useState();
@@ -57,6 +60,9 @@ const AppointmentSingle = (props) => {
   const [products, setProducts] = useState([]);
   const [productInputs, setProductInputs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [date, setDate] = useState();
+  const [selectedTime, setSelectedTime] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -81,6 +87,7 @@ const AppointmentSingle = (props) => {
         setItem(res.data);
         setStatus(res.data.appointmentStatus?.pop()?.status);
         setSelectedStatus(res.data.appointmentStatus?.pop()?.status);
+        setDate(res.data.appointmentDate);
       })
       .catch((error) => console.log(error))
       .finally(() => {
@@ -139,6 +146,8 @@ const AppointmentSingle = (props) => {
       });
     }
   };
+
+  const formattedDate = new Date(date)?.toLocaleDateString(); // Format date as string
 
   const mechanicHandler = () => {
     if (!selectedMechanic) {
@@ -211,6 +220,91 @@ const AppointmentSingle = (props) => {
     );
   };
 
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setDate(date);
+    // console.warn("A date has been picked: ", date);
+    hideDatePicker();
+  };
+
+  const timeOptions = [
+    "9:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "2:00 PM",
+    "3:00 PM",
+    "4:00 PM",
+  ];
+
+  const renderTimeButton = (time, selected) => (
+    <TouchableOpacity
+      key={time}
+      onPress={() => handleTimePress(time)}
+      style={{
+        backgroundColor: selected ? "#ef4444" : "white",
+        padding: 5,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: "#ef4444",
+        margin: 5,
+        alignItems: "center",
+      }}
+    >
+      <Text style={{ color: selected ? "white" : "#ef4444" }}>{time}</Text>
+    </TouchableOpacity>
+  );
+
+  const handleTimePress = (time) => {
+    setSelectedTime(time);
+  };
+
+  const updateDateHandler = () => {
+    if (!date || !selectedTime) {
+      // Display a toast message for empty fields
+      Toast.show({
+        topOffset: 60,
+        type: "error",
+        text1: "Please select a date and time",
+        text2: "Date and time are required for updating",
+      });
+      return; // Stop execution if fields are empty
+    }
+
+    try {
+      axios
+        .put(`${baseURL}appointments/update-date/${item._id}`, {
+          date,
+          timeSlot: selectedTime,
+        })
+        .then((res) => {
+          // Handle the response, update UI, show success message, etc.
+          console.log("Mechanic assigned successfully:", res.data);
+          Toast.show({
+            topOffset: 60,
+            type: "success",
+            text1: "Successfully Change Date",
+            text2: `Appointment #${item._id} has been changed date`,
+          });
+        });
+    } catch (error) {
+      console.error(error);
+      // Handle errors, show an error toast, etc.
+      Toast.show({
+        topOffset: 60,
+        type: "error",
+        text1: "Something went wrong",
+        text2: "Please try again",
+      });
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -229,11 +323,11 @@ const AppointmentSingle = (props) => {
                 width: 64,
                 height: 64,
               }}
-              source={{
-                uri: item?.user?.avatar?.url
-                  ? item?.user?.avatar?.url
-                  : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
-              }}
+              source={
+                item?.user?.avatar?.url
+                  ? { uri: item?.user?.avatar?.url }
+                  : require("../../assets/images/teampoor-default.png")
+              }
               alt="images"
             />
 
@@ -273,6 +367,12 @@ const AppointmentSingle = (props) => {
                     ? "bg-yellow-200 px-2 rounded"
                     : status === "NOSHOW"
                     ? "bg-red-200 px-2 rounded"
+                    : status === "BACKJOBPENDING"
+                    ? "bg-yellow-200 px-2 rounded"
+                    : status === "BACKJOBCONFIRMED"
+                    ? "bg-blue-200 px-2 rounded"
+                    : status === "BACKJOBCOMPLETED"
+                    ? "bg-green-200 px-2 rounded"
                     : "bg-zinc-200 px-2 rounded"
                 }
               >
@@ -294,6 +394,12 @@ const AppointmentSingle = (props) => {
                       ? "text text-yellow-800"
                       : status === "NOSHOW"
                       ? "text text-red-800"
+                      : status === "BACKJOBPENDING"
+                      ? "text text-yellow-800"
+                      : status === "BACKJOBCONFIRMED"
+                      ? "text text-blue-800"
+                      : status === "BACKJOBCOMPLETED"
+                      ? "text text-green-800"
                       : ""
                   }
                 >
@@ -370,6 +476,14 @@ const AppointmentSingle = (props) => {
                 />
                 <Select.Item label="Appointment Delayed" value="DELAYED" />
                 <Select.Item label="No Show" value="NOSHOW" />
+                <Select.Item
+                  label="Confirm Back Job"
+                  value="BACKJOBCONFIRMED"
+                />
+                <Select.Item
+                  label="Complete Back Job"
+                  value="BACKJOBCOMPLETED"
+                />
                 {/* <Select.Item label="Payment Pending" value="Payment Pending" />
           <Select.Item label="Payment Received" value="Payment Received" /> */}
               </Select>
@@ -384,6 +498,50 @@ const AppointmentSingle = (props) => {
               </TouchableOpacity>
             </View>
           </View>
+
+          {status === "BACKJOBCONFIRMED" && (
+            <View className="bg-white p-2 rounded-lg space-y-2">
+              <View>
+                <Text className="font-semibold">Select Date: </Text>
+                {/* <Text className="text-xs">Choose date.</Text> */}
+              </View>
+
+              <View>
+                <TouchableOpacity
+                  onPress={showDatePicker}
+                  className="p-2 bg-gray-100 text-gray-700 rounded-lg mb-1 flex-row items-center space-x-2"
+                >
+                  <CalendarDaysIcon color="grey" size={20} />
+                  <TextInput
+                    value={formattedDate}
+                    placeholder="Select date"
+                    editable={false}
+                    className="text-black"
+                  />
+                </TouchableOpacity>
+
+                <DateTimePickerModal
+                  isVisible={isDatePickerVisible}
+                  mode="date"
+                  onConfirm={handleConfirm}
+                  onCancel={hideDatePicker}
+                />
+              </View>
+
+              <View className="flex flex-row flex-wrap">
+                {timeOptions.map((time) =>
+                  renderTimeButton(time, time === selectedTime)
+                )}
+              </View>
+
+              <TouchableOpacity
+                className="bg-green-500 p-2 rounded-lg justify-center items-center"
+                onPress={() => updateDateHandler()}
+              >
+                <Text className="text-white">Change Date</Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
           {item?.serviceType === "Home Service" && (
             <View className="bg-white p-2 rounded-lg space-y-2">
@@ -464,13 +622,13 @@ const AppointmentSingle = (props) => {
                   <Text className="font-semibold">{item?.brand}</Text>
                 </View>
 
-                <View className="flex flex-row space-x-2 justify-between items-center">
+                {/* <View className="flex flex-row space-x-2 justify-between items-center">
                   <Text className="text-zinc-700">Model:</Text>
                   <Text className="font-semibold">{item?.model}</Text>
-                </View>
+                </View> */}
 
                 <View className="flex flex-row space-x-2 justify-between items-center">
-                  <Text className="text-zinc-700">Year:</Text>
+                  <Text className="text-zinc-700">Year Model:</Text>
                   <Text className="font-semibold">{item?.year}</Text>
                 </View>
 
@@ -485,7 +643,12 @@ const AppointmentSingle = (props) => {
                 </View>
 
                 <View className="flex flex-row space-x-2 justify-between items-center">
-                  <Text className="text-zinc-700">Type:</Text>
+                  <Text className="text-zinc-700">Type of Fuel:</Text>
+                  <Text className="font-semibold">{item?.fuel}</Text>
+                </View>
+
+                <View className="flex flex-row space-x-2 justify-between items-center">
+                  <Text className="text-zinc-700">Vehicle Category:</Text>
                   <Text className="font-semibold">{item?.type}</Text>
                 </View>
               </View>
@@ -497,7 +660,7 @@ const AppointmentSingle = (props) => {
               <Text className="font-semibold">Selected Services</Text>
             </View>
 
-            {item?.appointmentService?.map((service, index) => (
+            {item?.appointmentServices?.map((service, index) => (
               <View className="bg-zinc-100 p-2 rounded flex flex-row space-x-2 items-center">
                 <Image
                   className="rounded"
@@ -505,11 +668,11 @@ const AppointmentSingle = (props) => {
                     width: 44,
                     height: 44,
                   }}
-                  source={{
-                    uri: service.service?.images[0]?.url
-                      ? service.service?.images[0]?.url
-                      : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
-                  }}
+                  source={
+                    service.service?.images[0]?.url
+                      ? { uri: service.service?.images[0]?.url }
+                      : require("../../assets/images/teampoor-default.png")
+                  }
                   alt="images"
                 />
 
@@ -560,11 +723,11 @@ const AppointmentSingle = (props) => {
               <TouchableOpacity onPress={() => setModalVisible(true)}>
                 <Image
                   style={{ width: 125, height: 125 }}
-                  source={{
-                    uri: item?.mechanicProof?.url
-                      ? item?.mechanicProof?.url
-                      : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
-                  }}
+                  source={
+                    item?.mechanicProof?.url
+                      ? { uri: item?.mechanicProof?.url }
+                      : require("../../assets/images/teampoor-default.png")
+                  }
                   alt="images"
                   resizeMode="contain"
                 />
@@ -592,9 +755,7 @@ const AppointmentSingle = (props) => {
                         Quantity
                       </Text>
                       <View className="w-1/3 items-end">
-                        <Text className="font-semibold">
-                          Price
-                        </Text>
+                        <Text className="font-semibold">Price</Text>
                       </View>
                     </View>
                   </View>
@@ -603,7 +764,9 @@ const AppointmentSingle = (props) => {
                     {item.parts.map((part, index) => (
                       <View>
                         <View className="flex flex-row justify-between items-center">
-                          <Text className="w-1/3">{part.productName}</Text>
+                          <Text className="w-1/3">
+                            {part.productName} ({part.brandName})
+                          </Text>
                           <Text className="w-1/3 text-center">
                             {part.quantity}
                           </Text>
@@ -656,11 +819,11 @@ const AppointmentSingle = (props) => {
               <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
                 <Image
                   style={{ width: wp("100%"), height: hp("100%") }}
-                  source={{
-                    uri: item?.mechanicProof?.url
-                      ? item?.mechanicProof?.url
-                      : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
-                  }}
+                  source={
+                    item?.mechanicProof?.url
+                      ? { uri: item?.mechanicProof?.url }
+                      : require("../../assets/images/teampoor-default.png")
+                  }
                   alt="images"
                   resizeMode="contain"
                 />

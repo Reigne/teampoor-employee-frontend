@@ -133,11 +133,15 @@ const SupplierDashboard = () => {
           </View>
 
           <View className="grow items-center">
-            {item.stock < 10 ? (
+            {item.stock <= 0 ? (
               <Badge colorScheme="danger" className="rounded-full">
+                <Text className="text-xs text-red-500">No Stock</Text>
+              </Badge>
+            ) : item.stock <= 10 ? (
+              <Badge colorScheme="warning" className="rounded-full">
                 <Text className="text-xs">Low Stock</Text>
               </Badge>
-            ) : item.stock < 50 ? (
+            ) : item.stock <= 30 ? (
               <Badge colorScheme="info" className="rounded-full">
                 <Text className="text-xs">Average Stock</Text>
               </Badge>

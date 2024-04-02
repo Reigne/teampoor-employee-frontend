@@ -330,14 +330,14 @@ const TaskSingle = (props) => {
               <Text className="text-zinc-700">Brand:</Text>
               <Text className="font-semibold">{item.brand}</Text>
             </View>
-
+{/* 
             <View className="flex flex-row space-x-2 justify-between items-center">
               <Text className="text-zinc-700">Model:</Text>
               <Text className="font-semibold">{item.model}</Text>
-            </View>
+            </View> */}
 
             <View className="flex flex-row space-x-2 justify-between items-center">
-              <Text className="text-zinc-700">Year:</Text>
+              <Text className="text-zinc-700">Year Model:</Text>
               <Text className="font-semibold">{item.year}</Text>
             </View>
 
@@ -352,7 +352,12 @@ const TaskSingle = (props) => {
             </View>
 
             <View className="flex flex-row space-x-2 justify-between items-center">
-              <Text className="text-zinc-700">Type:</Text>
+              <Text className="text-zinc-700">Type of Fuel:</Text>
+              <Text className="font-semibold">{item.fuel}</Text>
+            </View>
+
+            <View className="flex flex-row space-x-2 justify-between items-center">
+              <Text className="text-zinc-700">Vehicle Category:</Text>
               <Text className="font-semibold">{item.type}</Text>
             </View>
           </View>
@@ -364,7 +369,7 @@ const TaskSingle = (props) => {
           <Text className="font-semibold">Selected Services</Text>
         </View>
 
-        {item.appointmentService.map((service, index) => (
+        {item.appointmentServices.map((service, index) => (
           <View className="bg-zinc-100 p-2 rounded flex flex-row space-x-2 items-center">
             <Image
               className="rounded"

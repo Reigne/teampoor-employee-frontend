@@ -194,7 +194,7 @@ const Products = (props) => {
         ) : (
           <View className="px-2">
             {/* { productFilter.length > 0 ? ( */}
-            <View className="rounded-lg">
+            <View className="rounded-lg pb-10">
               <FlatList
                 data={productFilter}
                 ListHeaderComponent={ListHeader}
@@ -228,6 +228,7 @@ const Products = (props) => {
           </View>
         )}
       </View>
+
     </View>
   );
 };

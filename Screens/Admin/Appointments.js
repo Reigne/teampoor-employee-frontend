@@ -54,7 +54,7 @@ const Appointments = () => {
         </View>
       ) : (
         <FlatList
-          data={appointments ? appointments.reverse().slice() : []}
+          data={appointments.slice().reverse()}
           renderItem={({ item }) => (
             <View className="mb-2">
               <AppointmentList item={item} />

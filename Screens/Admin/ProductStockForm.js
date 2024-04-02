@@ -9,7 +9,16 @@ import {
   TextInput,
   FlatList,
 } from "react-native";
-import { Select, ZStack, VStack, Box, Switch, Stack, Radio } from "native-base";
+import {
+  Select,
+  ZStack,
+  VStack,
+  Box,
+  Switch,
+  Stack,
+  Radio,
+  ScrollView,
+} from "native-base";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import baseURL from "../../assets/common/baseUrl";
@@ -39,7 +48,7 @@ const ProductStockForm = (props) => {
 
   useEffect(() => {
     setItem(props.route.params.item);
-    setImages(props.route.params.item.images);
+    setImages(props.route.params.item.images || []);
 
     AsyncStorage.getItem("jwt")
       .then((res) => {
@@ -113,30 +122,26 @@ const ProductStockForm = (props) => {
   return (
     <KeyboardAwareScrollView className="flex-1 bg-white">
       <View className="">
-        <View className="flex-1 justify-start bg-red-500 ">
-          <View className="flex flex-row justify-center mt-5">
-            <View className="flex justify-center items-center">
-              <FlatList
-                data={images}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                  <>
-                    {console.log(item, "each item")}
+        <View className=" justify-start bg-red-500 ">
+          <View className="flex-row justify-center mt-5">
+            <View className="justify-center items-center">
+              {images.length > 0 && (
+                <ScrollView horizontal>
+                  {images.map((item, index) => (
                     <Image
+                      key={index.toString()}
                       source={
-                        item.url
-                          ? { uri: item.url }
-                          : item.uri
-                          ? { uri: item.uri }
+                        item?.url
+                          ? { uri: item?.url }
+                          : item?.uri
+                          ? { uri: item?.uri }
                           : require("../../assets/images/teampoor-default.png")
                       }
                       style={{ width: 200, height: 200, margin: 5 }}
-                      className=""
                     />
-                  </>
-                )}
-                horizontal
-              />
+                  ))}
+                </ScrollView>
+              )}
             </View>
           </View>
 
@@ -221,7 +226,10 @@ const ProductStockForm = (props) => {
                   )}
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity className="border border-zinc-700 py-4 rounded-2xl items-center mt-4">
+              <TouchableOpacity
+                className="border border-zinc-700 py-4 rounded-2xl items-center mt-4"
+                onPress={() => navigation.goBack()}
+              >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Text className="font-xl font-bold text-center text-zinc-700">
                     Cancel

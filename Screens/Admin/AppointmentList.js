@@ -43,54 +43,66 @@ const AppointmentList = ({ item }) => {
         <Text className="text-xs text-zinc-700">{item.serviceType}</Text>
 
         <View
+          className={
+            status === "PENDING"
+              ? "bg-yellow-200 px-2 rounded"
+              : status === "CONFIRMED"
+              ? "bg-green-200 px-2 rounded"
+              : status === "INPROGRESS"
+              ? "bg-blue-200 px-2 rounded"
+              : status === "COMPLETED"
+              ? "bg-green-200 px-2 rounded"
+              : status === "CANCELLED"
+              ? "bg-red-200 px-2 rounded"
+              : status === "RESCHEDULED"
+              ? "bg-purple-200 px-2 rounded"
+              : status === "DELAYED"
+              ? "bg-yellow-200 px-2 rounded"
+              : status === "NOSHOW"
+              ? "bg-red-200 px-2 rounded"
+              : status === "Pending"
+              ? "bg-yellow-200 px-2 rounded"
+              : status === "BACKJOBPENDING"
+              ? "bg-yellow-200 px-2 rounded"
+              : status === "BACKJOBCONFIRMED"
+              ? "bg-blue-200 px-2 rounded"
+              : status === "BACKJOBCOMPLETED"
+              ? "bg-green-200 px-2 rounded"
+              : "bg-zinc-200 px-2 rounded"
+          }
+        >
+          <Text
             className={
               status === "PENDING"
-                ? "bg-yellow-200 px-2 rounded"
+                ? "text text-yellow-800"
                 : status === "CONFIRMED"
-                ? "bg-green-200 px-2 rounded"
+                ? "text text-green-800"
                 : status === "INPROGRESS"
-                ? "bg-blue-200 px-2 rounded"
+                ? "text text-blue-800"
                 : status === "COMPLETED"
-                ? "bg-green-200 px-2 rounded"
+                ? "text text-green-800"
                 : status === "CANCELLED"
-                ? "bg-red-200 px-2 rounded"
+                ? "text text-red-800"
                 : status === "RESCHEDULED"
-                ? "bg-purple-200 px-2 rounded"
+                ? "text text-purple-800"
                 : status === "DELAYED"
-                ? "bg-yellow-200 px-2 rounded"
+                ? "text text-yellow-800"
                 : status === "NOSHOW"
-                ? "bg-red-200 px-2 rounded"
+                ? "text text-red-800"
                 : status === "Pending"
-                ? "bg-yellow-200 px-2 rounded"
-                : "bg-zinc-200 px-2 rounded"
+                ? "text text-yellow-800"
+                : status === "BACKJOBPENDING"
+                ? "text text-yellow-800"
+                : status === "BACKJOBCONFIRMED"
+                ? "text text-blue-800"
+                : status === "BACKJOBCOMPLETED"
+                ? "text text-green-800"
+                : ""
             }
           >
-            <Text
-              className={
-                status === "PENDING"
-                  ? "text text-yellow-800"
-                  : status === "CONFIRMED"
-                  ? "text text-green-800"
-                  : status === "INPROGRESS"
-                  ? "text text-blue-800"
-                  : status === "COMPLETED"
-                  ? "text text-green-800"
-                  : status === "CANCELLED"
-                  ? "text text-red-800"
-                  : status === "RESCHEDULED"
-                  ? "text text-purple-800"
-                  : status === "DELAYED"
-                  ? "text text-yellow-800"
-                  : status === "NOSHOW"
-                  ? "text text-red-800"
-                  : status === "Pending"
-                  ? "text text-yellow-800"
-                  : ""
-              }
-            >
-              {status}
-            </Text>
-          </View>
+            {status}
+          </Text>
+        </View>
       </View>
 
       <View className="flex flex-row space-x-2">
@@ -100,11 +112,11 @@ const AppointmentList = ({ item }) => {
             width: 74,
             height: 74,
           }}
-          source={{
-            uri: item.user.avatar.url
-              ? item.user.avatar.url
-              : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
-          }}
+          source={
+            item.user?.avatar?.url
+              ? { uri: item.user?.avatar?.url }
+              : require("../../assets/images/teampoor-default.png")
+          }
           alt="images"
         />
 
@@ -138,7 +150,7 @@ const AppointmentList = ({ item }) => {
       </View>
 
       <View className="p-2 bg-zinc-200 rounded-lg space-y-2">
-        {item.appointmentService.map((service, index) => (
+        {item.appointmentServices.map((service, index) => (
           <View className="flex flex-row space-x-2 items-center">
             <Image
               className="rounded"
@@ -146,11 +158,11 @@ const AppointmentList = ({ item }) => {
                 width: 24,
                 height: 24,
               }}
-              source={{
-                uri: service.service.images[0]?.url
-                  ? service.service.images[0]?.url
-                  : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
-              }}
+              source={
+                service.service?.images[0]?.url
+                  ? { uri: service.service?.images[0]?.url }
+                  : require("../../assets/images/teampoor-default.png")
+              }
               alt="images"
             />
 
