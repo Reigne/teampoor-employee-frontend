@@ -4,10 +4,10 @@
     "slug": "Mobile-Employee",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-teampoor-admin.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/images/teampoor-splash.png",
+      "image": "./assets/splash-teampoor-admin.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
