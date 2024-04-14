@@ -424,6 +424,7 @@ const ProductForm = (props) => {
                     ? "border border-red-500 p-4 bg-gray-100 text-gray-700 rounded-2xl mb-1"
                     : "p-4 bg-gray-100 text-gray-700 rounded-2xl"
                 }
+                textAlignVertical="top"
                 placeholder="Enter product description"
                 name="description"
                 id="description"
