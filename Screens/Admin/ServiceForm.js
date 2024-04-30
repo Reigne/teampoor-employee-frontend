@@ -3,13 +3,12 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   TouchableOpacity,
   Platform,
   TextInput,
   FlatList,
 } from "react-native";
-import { Select, ZStack, VStack, Box, Switch, Stack, Radio } from "native-base";
+import { Stack, Radio } from "native-base";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import baseURL from "../../assets/common/baseUrl";
@@ -17,11 +16,8 @@ import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import mime from "mime";
-import { CameraIcon } from "react-native-heroicons/solid";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import CheckIcon from "react-native-heroicons/solid";
-import { CloseIcon } from "react-native-heroicons/solid"; // Import the CloseIcon component
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 
 const ServiceForm = (props) => {
   const [token, setToken] = useState();
@@ -52,7 +48,6 @@ const ServiceForm = (props) => {
       setPrice(props.route.params.item.price?.toString());
       setImages(props.route.params.item.images);
       setMainImages(props.route.params.item.images);
-      // setCategory(props.route.params.item.category.id)
       setIsAvailable(props.route.params.item.isAvailable);
       setType(props.route.params.item.type?.toString() || "");
     }
@@ -62,11 +57,6 @@ const ServiceForm = (props) => {
         setToken(res);
       })
       .catch((error) => console.log(error));
-
-    // axios
-    //   .get(`${baseURL}serviceCategories`)
-    //   .then((res) => setCategories(res.data))
-    //   .catch((error) => alert("Error to load categories!"));
 
     (async () => {
       if (Platform.OS !== "web") {
@@ -111,9 +101,7 @@ const ServiceForm = (props) => {
 
     if (!name) errors.name = "Name is required";
     if (!price) errors.price = "Price is required";
-    // if (!laborFee) errors.laborFee = "Labor Fee is required";
     if (!description) errors.description = "Description is required";
-    // if (!category) errors.category = "Category is required";
 
     setErrors(errors);
 
@@ -121,7 +109,6 @@ const ServiceForm = (props) => {
   };
 
   const addService = () => {
-    // console.log(category, "Category");
     console.log(isAvailable, "isAvailable");
     if (!validateForm()) {
       setLoading(false);
@@ -134,12 +121,10 @@ const ServiceForm = (props) => {
     formData.append("price", price);
     formData.append("type", type);
     formData.append("description", description);
-    // formData.append("category", category);
     formData.append("isAvailable", isAvailable);
 
     if (isChanged === true) {
       images.forEach((image, index) => {
-        // console.log(image.uri, "image");
         const newImageUri = "file:///" + image.uri.split("file:/").join("");
 
         formData.append("images", {
@@ -304,39 +289,6 @@ const ServiceForm = (props) => {
                 </View>
               </View>
 
-              {/* <View>
-                <Text className="mb-2">Service Category</Text>
-                <View
-                  className={
-                    errors.category
-                      ? "border border-red-500 bg-gray-100 text-gray-700 mb-1"
-                      : "bg-gray-100 text-gray-700"
-                  }
-                >
-                  <Select
-                    minWidth="90%"
-                    placeholder="Select your Category"
-                    selectedValue={category}
-                    onValueChange={(e) => setCategory(e)}
-                    className="p-3 bg-gray-100 text-gray-700 "
-                  >
-                    {categories.map((c, index) => {
-                      return (
-                        <Select.Item key={c.id} label={c.name} value={c.id} />
-                      );
-                    })}
-                  </Select>
-                </View>
-
-                <View className="">
-                  {errors.category ? (
-                    <Text className="text-sm text-red-500">
-                      {errors.category}
-                    </Text>
-                  ) : null}
-                </View>
-              </View> */}
-
               <View>
                 <Text className="mb-2">Price *</Text>
                 <TextInput
@@ -359,29 +311,6 @@ const ServiceForm = (props) => {
                   ) : null}
                 </View>
               </View>
-
-              {/* <View>
-                <Text className="mb-2">Labor Fee *</Text>
-                <TextInput
-                  className={
-                    errors.laborFee
-                      ? "border border-red-500 p-4 bg-gray-100 text-gray-700 rounded-2xl mb-1"
-                      : "p-4 bg-gray-100 text-gray-700 rounded-2xl"
-                  }
-                  placeholder="Enter labor fee"
-                  name="laborFee"
-                  id="laborFee"
-                  value={laborFee}
-                  keyboardType={"numeric"}
-                  onChangeText={(text) => setLaborFee(text)}
-                ></TextInput>
-
-                <View>
-                  {errors.laborFee ? (
-                    <Text className="text-sm text-red-500">{errors.laborFee}</Text>
-                  ) : null}
-                </View>
-              </View> */}
 
               <View>
                 <Text className="mb-2">Description *</Text>
@@ -451,15 +380,14 @@ const ServiceForm = (props) => {
 
             <View className="px-4 mb-4">
               <TouchableOpacity
-                // className="bg-red-500 py-4 rounded-2xl items-center"
                 className={
                   loading
-                    ? "bg-red-500 py-4 rounded-2xl items-center"
+                    ? "bg-zinc-500 py-4 rounded-2xl items-center"
                     : "bg-red-500 py-4 rounded-2xl items-center"
                 }
                 onPress={() => {
-                  setLoading(true); // Set loading to true when the button is pressed
-                  addService(); // Trigger the addProduct function
+                  setLoading(true); 
+                  addService(); 
                 }}
                 disabled={loading ? true : false}
               >

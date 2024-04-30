@@ -3,13 +3,12 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   TouchableOpacity,
   Platform,
   TextInput,
   FlatList,
 } from "react-native";
-import { Select, ZStack, VStack, Box, Switch, Stack, Radio } from "native-base";
+import { Select, Box, Stack, Radio } from "native-base";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import baseURL from "../../assets/common/baseUrl";
@@ -17,11 +16,8 @@ import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import mime from "mime";
-import { CameraIcon } from "react-native-heroicons/solid";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import CheckIcon from "react-native-heroicons/solid";
-import { CloseIcon } from "react-native-heroicons/solid"; // Import the CloseIcon component
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import AuthGlobal from "../../Context/Store/AuthGlobal";
 
 const ProductForm = (props) => {
@@ -39,7 +35,7 @@ const ProductForm = (props) => {
   const [price, setPrice] = useState(0);
   const [images, setImages] = useState([]);
   const [mainImage, setMainImage] = useState();
-  const [isWarranty, setIsWarranty] = useState(false); // Change the initial state to false (no warranty)
+  const [isWarranty, setIsWarranty] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
   const [token, setToken] = useState();
   const [errors, setErrors] = useState({});
@@ -107,36 +103,26 @@ const ProductForm = (props) => {
   const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      // allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-      allowsMultipleSelection: true, // Enable multiple image selection
+      allowsMultipleSelection: true,
       selectionLimit: 10,
     });
 
     if (result.canceled) {
-      // Handle cancellation
       return;
     }
 
     if (result.assets && result.assets.length > 0) {
-      // Use result.assets instead of result.uri
       const images = result.assets.map((asset) => ({
         uri: asset.uri,
-        // Add other properties as needed
       }));
-
-      // console.log(
-      //   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-      //   images
-      // );
 
       setImages(images);
       setIsChanged(true);
     }
   };
 
-  // Function to remove an image by index
   const removeImage = (index) => {
     const newImages = [...images];
     newImages.splice(index, 1);
@@ -160,19 +146,6 @@ const ProductForm = (props) => {
   };
 
   const addProduct = () => {
-    // if (
-    //   name == "" ||
-    //   price == "" ||
-    //   description == "" ||
-    //   type == "" ||
-    //   brand == "" ||
-    //   category == "" ||
-    //   stock == "" ||
-    //   isWarranty == ""
-    // ) {
-    //   setError("Please fill in the form correctly");
-    // }
-
     if (!validateForm()) {
       setLoading(false);
       return;
@@ -188,13 +161,12 @@ const ProductForm = (props) => {
     formData.append("category", category);
     formData.append("stock", stock);
     formData.append("isWarranty", isWarranty);
-    formData.append("user", context.stateUser.user.userId)
+    formData.append("user", context.stateUser.user.userId);
 
     console.log(images, "images");
 
     if (isChanged === true) {
       images.forEach((image, index) => {
-        // formData.append(`images[${index}]`, image);
         console.log(image.uri, "image");
         const newImageUri = "file:///" + image.uri.split("file:/").join("");
 
@@ -209,31 +181,6 @@ const ProductForm = (props) => {
     } else {
       formData.append("isNewImage", false);
     }
-
-    // console.log(mainImage, "main image");
-    // console.log(image, "image");
-
-    // // Append each image to the formData
-    // images.forEach((image, index) => {
-    //   const newImageUri = "file:///" + image.uri.split("file:/").join("");
-    //   formData.append(`images${index}`, {
-    //     uri: newImageUri,
-    //     type: mime.getType(newImageUri),
-    //     name: newImageUri.split("/").pop(),
-    //   });
-    // });
-
-    // // Append the main image if it is different from the images array
-    // if (mainImage && !images.find((image) => image.uri === mainImage)) {
-    //   const newImageUri = "file:///" + mainImage.split("file:/").join("");
-    //   formData.append("images", {
-    //     uri: newImageUri,
-    //     type: mime.getType(newImageUri),
-    //     name: newImageUri.split("/").pop(),
-    //   });
-    // }
-
-    console.log(formData, "formData log");
 
     const config = {
       headers: {
@@ -311,15 +258,6 @@ const ProductForm = (props) => {
       <View className="">
         <View className="flex-1 justify-start bg-red-500 ">
           <View className="flex flex-row justify-center mt-5">
-            {/* <Image
-                source={
-                  mainImage
-                    ? { uri: mainImage }
-                    : require("../../assets/images/teampoor-default.png")
-                }
-                style={{ width: 200, height: 200 }}
-                className="rounded-full"
-              /> */}
             {images.length > 0 ? (
               <View className="flex justify-center items-center">
                 {console.log(images, "images")}
@@ -360,11 +298,6 @@ const ProductForm = (props) => {
                 />
               </TouchableOpacity>
             )}
-
-            {/* <CameraIcon
-            size={24}
-            color="black"
-          /> */}
           </View>
 
           <View
@@ -532,7 +465,7 @@ const ProductForm = (props) => {
                 ) : null}
               </View>
 
-              <Text>Product has warranty?</Text>
+              {/* <Text>Product has warranty?</Text>
               <Radio.Group
                 accessibilityLabel="product has warranty?"
                 value={isWarranty}
@@ -558,19 +491,19 @@ const ProductForm = (props) => {
                     Yes
                   </Radio>
                 </Stack>
-              </Radio.Group>
+              </Radio.Group> */}
+              
             </View>
             <View className="px-4 mb-4">
               <TouchableOpacity
-                // className="bg-red-500 py-4 rounded-2xl items-center"
                 className={
                   loading
-                    ? "bg-red-500 py-4 rounded-2xl items-center"
+                    ? "bg-zinc-500 py-4 rounded-2xl items-center"
                     : "bg-red-500 py-4 rounded-2xl items-center"
                 }
                 onPress={() => {
-                  setLoading(true); // Set loading to true when the button is pressed
-                  addProduct(); // Trigger the addProduct function
+                  setLoading(true);
+                  addProduct();
                 }}
                 disabled={loading ? true : false}
               >

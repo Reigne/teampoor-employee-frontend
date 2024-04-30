@@ -13,7 +13,6 @@ import mime from "mime";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
-
 import baseURL from "../../assets/common/baseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PencilIcon } from "react-native-heroicons/solid";
@@ -66,7 +65,6 @@ const BrandForm = (props) => {
       aspect: [4, 3],
       quality: 1,
     });
-    // let result = await ImagePicker.launchCameraAsync()
 
     if (!result.canceled) {
       console.log(result.assets);
@@ -107,11 +105,6 @@ const BrandForm = (props) => {
     }
 
     console.log(formData);
-
-    // if (mainImage == image) {
-    // } else if (mainImage !== image) {
-
-    // }
 
     const config = {
       headers: {
@@ -250,15 +243,14 @@ const BrandForm = (props) => {
 
       <View className="px-4 mb-4 absolute inset-x-0 bottom-0">
         <TouchableOpacity
-          // className="bg-red-500 py-4 rounded-2xl items-center"
           className={
             loading
-              ? "bg-red-500 py-4 rounded-2xl items-center"
+              ? "bg-zinc-500 py-4 rounded-2xl items-center"
               : "bg-red-500 py-4 rounded-2xl items-center"
           }
           onPress={() => {
-            setLoading(true); // Set loading to true when the button is pressed
-            addBrand(); // Trigger the addProduct function
+            setLoading(true);
+            addBrand();
           }}
           disabled={loading ? true : false}
         >

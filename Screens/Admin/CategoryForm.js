@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import {} from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import mime from "mime";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
-
 import baseURL from "../../assets/common/baseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PencilIcon } from "react-native-heroicons/solid";
@@ -59,7 +65,6 @@ const CategoryForm = (props) => {
       aspect: [4, 3],
       quality: 1,
     });
-    // let result = await ImagePicker.launchCameraAsync()
 
     if (!result.canceled) {
       console.log(result.assets);
@@ -234,15 +239,14 @@ const CategoryForm = (props) => {
 
       <View className="px-4 mb-4 absolute inset-x-0 bottom-0">
         <TouchableOpacity
-          // className="bg-red-500 py-4 rounded-2xl items-center"
           className={
             loading
-              ? "bg-red-500 py-4 rounded-2xl items-center"
+              ? "bg-zinc-500 py-4 rounded-2xl items-center"
               : "bg-red-500 py-4 rounded-2xl items-center"
           }
           onPress={() => {
-            setLoading(true); // Set loading to true when the button is pressed
-            addCategory(); // Trigger the addProduct function
+            setLoading(true);
+            addCategory();
           }}
           disabled={loading ? true : false}
         >

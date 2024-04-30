@@ -57,9 +57,9 @@ const AppointmentParts = (props) => {
   useEffect(() => {
     fetchProducts();
 
-    if (item.parts) {
+    if (item?.parts) {
       setProductInputs(
-        item.parts.map((part) => ({
+        item?.parts.map((part) => ({
           name: part.productName,
           id: part._id,
           quantity: part.quantity.toString(),
@@ -129,7 +129,7 @@ const AppointmentParts = (props) => {
           name: selectedProduct.label,
           id: selectedProduct.value,
           price: selectedProduct.price,
-          brand: selectedProduct.brand
+          brand: selectedProduct.brand,
         },
       ]);
       setSelectedProduct(null);
@@ -231,16 +231,22 @@ const AppointmentParts = (props) => {
         </View>
 
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Image
-            style={{ width: 125, height: 125 }}
-            source={{
-              uri: item?.mechanicProof?.url
-                ? item?.mechanicProof?.url
-                : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
-            }}
-            alt="images"
-            resizeMode="contain"
-          />
+          {item?.mechanicProof ? (
+            <Image
+              style={{ width: 125, height: 125 }}
+              source={{
+                uri: item?.mechanicProof?.url
+                  ? item?.mechanicProof?.url
+                  : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
+              }}
+              alt="images"
+              resizeMode="contain"
+            />
+          ) : (
+            <View>
+              <Text className="text-xs text-center text-red-400">The inspection report has not been uploaded yet</Text>
+            </View>
+          )}
         </TouchableOpacity>
         <View>
           {/* <TouchableOpacity

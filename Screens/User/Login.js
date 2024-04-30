@@ -1,25 +1,17 @@
 import { View, Text, Image, TouchableOpacity, TextInput } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Register from "./Register";
 import AuthGlobal from "../../Context/Store/AuthGlobal";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { HelperText } from "react-native-paper";
 import { loginUser } from "../../Context/Actions/Auth.actions";
 import Toast from "react-native-toast-message";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-const Login = (props) => {
+const Login = () => {
   const navigation = useNavigation();
 
   const context = useContext(AuthGlobal);
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -43,18 +35,8 @@ const Login = (props) => {
         text1: "Warning!",
         text2: "Please fill in your credentials",
       });
-      // setError("Please fill in your credentials");
     } else {
       loginUser(user, context.dispatch);
-      // Toast.show({
-      //   topOffset: 60,
-      //   type: "success",
-      //   text1: "Successfully Login",
-      //   text2: "You can now explore our shop!",
-      // });
-
-      // console.log(user, context.dispatch);
-      // console.log("error");
     }
   };
 
@@ -64,14 +46,6 @@ const Login = (props) => {
     }
   }, [context.stateUser.isAuthenticated]);
 
-  // AsyncStorage.getAllKeys((err, keys) => {
-  //   AsyncStorage.multiGet(keys, (error, stores) => {
-  //     stores.map((result, i, store) => {
-  //       console.log({ [store[i][0]]: store[i][1] });
-  //       return true;
-  //     });
-  //   });
-  // });
 
   return (
     <View className="flex-1  bg-red-500">
@@ -90,17 +64,6 @@ const Login = (props) => {
         }) => (
           <View className="flex-1 justify-center bg-white px-8 pt-8">
             <View className="form space-y-2">
-              {/* <View className="flex  items-center">
-                <Image
-                  source={require("../../assets/images/teampoor-icon.png")}
-                  style={{ width: 125, height: 125 }}
-                  className="rounded-full"
-                  resizeMode="contain"
-                />
-
-                <Text className="font-extrabold text-2xl text-red-500">Welcome</Text>
-                <Text className="font-extrabold text-2xl text-red-500">To TeamPoor</Text>
-              </View> */}
 
               <View className="flex items-center space-y-2 m-9">
                 <Image
@@ -163,11 +126,6 @@ const Login = (props) => {
                 </View>
               </View>
 
-              <TouchableOpacity className="flex items-end mb-5">
-                {/* <Text className="text-gray-400">Forgot Password?</Text> */}
-              </TouchableOpacity>
-
-              {/* <Text>{error ? <Error message={error} /> : null}</Text> */}
               <TouchableOpacity
                 className="bg-red-500 py-4 rounded-2xl"
                 onPress={() => handleSubmit()}
@@ -176,44 +134,6 @@ const Login = (props) => {
                   Login
                 </Text>
               </TouchableOpacity>
-
-              {/* "or" text */}
-              {/* 
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: 20,
-                }}
-              >
-                <View className="bg-gray-200" style={{ flex: 1, height: 1 }} />
-                <Text
-                  style={{
-                    marginHorizontal: 10,
-                    color: "#888888",
-                    fontWeight: "bold",
-                  }}
-                >
-                  or
-                </Text>
-                <View className="bg-gray-200" style={{ flex: 1, height: 1 }} />
-              </View>
-
-              <TouchableOpacity className="bg-zinc-700 py-4 rounded-2xl items-center">
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <View className="bg-white p-[2] rounded-full mr-2">
-                    <Image
-                      source={require("../../assets/images/google-icon.png")}
-                      style={{ width: 20, height: 20 }}
-                    />
-                  </View>
-
-                  <Text className="font-xl font-bold text-center text-white">
-                    Sign in with Google
-                  </Text>
-                </View>
-              </TouchableOpacity> */}
 
               <View className="flex flex-row text-center justify-center mb-5">
                 <Text className="mt-2 text-gray-500">

@@ -719,7 +719,7 @@ const AppointmentSingle = (props) => {
               <Text className="font-semibold text-lg">Inspection Report</Text>
               <Text className="text-xs">Motorcycle Inspection Report.</Text>
             </View>
-            {item?.mechanicProof && (
+            {item?.mechanicProof ? (
               <TouchableOpacity onPress={() => setModalVisible(true)}>
                 <Image
                   style={{ width: 125, height: 125 }}
@@ -732,6 +732,12 @@ const AppointmentSingle = (props) => {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
+            ) : (
+              <View className="p-2">
+                <Text className="text-xs text-center text-red-400">
+                  The inspection report has not been uploaded yet
+                </Text>
+              </View>
             )}
 
             <View></View>
@@ -739,13 +745,15 @@ const AppointmentSingle = (props) => {
 
           <View className="bg-white p-3 rounded-xl space-y-2 mb-5">
             <View>
-              <Text className="font-semibold text-lg">Additional Payment</Text>
-              <Text className="text-xs">Motorcycle Inspection Report.</Text>
+              <Text className="font-semibold text-lg">Additional Parts</Text>
+              <Text className="text-xs">
+                List of additional parts for motorcycle.
+              </Text>
             </View>
 
             <View className="border-b border-zinc-200" />
 
-            {item?.parts && (
+            {!item?.parts ? (
               <View className="space-y-2">
                 <View className="space-y-1">
                   <View>
@@ -761,7 +769,7 @@ const AppointmentSingle = (props) => {
                   </View>
 
                   <View className="bg-zinc-100 p-2 rounded-lg space-y-2">
-                    {item.parts.map((part, index) => (
+                    {item?.parts?.map((part, index) => (
                       <View>
                         <View className="flex flex-row justify-between items-center">
                           <Text className="w-1/3">
@@ -787,6 +795,12 @@ const AppointmentSingle = (props) => {
                   </Text>
                 </View>
               </View>
+            ) : (
+              <View>
+                <Text className="text-xs text-zinc-500 text-center">
+                  No additional parts
+                </Text>
+              </View>
             )}
 
             <View className="border-b border-zinc-200" />
@@ -798,7 +812,7 @@ const AppointmentSingle = (props) => {
               onPress={() => navigation.navigate("AppointmentParts", item)}
             >
               <Text className="font-semibold text-center text-white">
-                Add additional payment
+                Add Additional Parts
               </Text>
             </TouchableOpacity>
           </View>

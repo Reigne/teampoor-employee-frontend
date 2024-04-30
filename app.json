@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Mobile-Employee",
-    "slug": "Mobile-Employee",
+    "name": "TeamPoor - Staff Portal",
+    "slug": "mobile-employee",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon-teampoor-admin.png",
+    "icon": "./assets/teampoor-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash-teampoor-admin.png",
@@ -19,12 +19,19 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/teampoor-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.teampooradmin.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "27c51206-7baf-4a1b-8647-7285758e7802"
+      }
+    },
+    "owner": "reigneexpo"
   }
 }
