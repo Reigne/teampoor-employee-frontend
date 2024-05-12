@@ -61,8 +61,8 @@ const CategoryList = ({ item, index, deleteCategory }) => {
             className="rounded"
             style={{ width: 50, height: 50 }}
             source={
-              item.image.url
-                ? { uri: item.image.url }
+              item.images.url
+                ? { uri: item.images.url }
                 : require("../../assets/images/teampoor-default.png")
             }
             resizeMode="contain"

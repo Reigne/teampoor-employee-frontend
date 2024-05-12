@@ -73,8 +73,8 @@ const BrandList = ({ item, index, deleteBrand }) => {
             className="rounded"
             style={{ width: 34, height: 34 }}
             source={
-              item.image.url
-                ? { uri: item.image.url }
+              item.images.url
+                ? { uri: item.images.url }
                 : require("../../assets/images/teampoor-default.png")
             }
             resizeMode="contain"

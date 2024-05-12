@@ -40,7 +40,7 @@ const CategoryForm = (props) => {
     } else {
       setItem(props.route.params.item);
       setName(props.route.params.item.name);
-      setMainImage(props.route.params.item.image.url);
+      setMainImage(props.route.params.item.images.url);
     }
     AsyncStorage.getItem("jwt")
       .then((res) => {
