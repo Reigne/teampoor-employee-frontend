@@ -35,12 +35,12 @@ const SupplierLogList = ({ item }) => {
             <View className="flex flex-row justify-between items-center">
               <Text className="text-xs">Name:</Text>
               <Text className="">
-                {item.supplier.firstname} {item.supplier.lastname}
+                {item.supplier?.firstname} {item.supplier?.lastname}
               </Text>
             </View>
             <View className="flex flex-row justify-between items-center">
               <Text className="text-xs">Email:</Text>
-              <Text className="">{item.supplier.email}</Text>
+              <Text className="">{item.supplier?.email}</Text>
             </View>
             <View className="flex flex-row justify-between items-center">
               <Text className="text-xs">Invoice I.D:</Text>
