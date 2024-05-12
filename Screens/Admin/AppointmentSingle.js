@@ -44,7 +44,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const AppointmentSingle = (props) => {
   const appointmentID = props.route.params;
-  console.log(appointmentID, "item sa single");
+  // console.log(appointmentID, "item sa single");
   const navigation = useNavigation();
   // const status = props.route.params.status;
 
@@ -305,6 +305,8 @@ const AppointmentSingle = (props) => {
     }
   };
 
+  console.log("mechanic", item?.mechanic);
+
   return (
     <>
       {loading ? (
@@ -434,6 +436,33 @@ const AppointmentSingle = (props) => {
               {/* <Text className="text-xs text-zinc-700">#{item._id}</Text> */}
             </View>
           </View>
+
+          {item?.backJob ? (
+            <View className="bg-white rounded-xl p-2 space-y-2">
+              <View>
+                <Text>Backjob Request</Text>
+              </View>
+
+              <View>
+                <View className="flex-1 flex-row justify-between items-center">
+                  <Text className="text-xs text-zinc-700">Comment</Text>
+                  <Text className="text-xs text-zinc-700">
+                    {item?.backJob?.createdAt
+                      ? new Date(item?.backJob?.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "long",
+                            day: "2-digit",
+                            year: "numeric",
+                          }
+                        )
+                      : ""}
+                  </Text>
+                </View>
+                <Text>{item?.backJob?.comment}</Text>
+              </View>
+            </View>
+          ) : null}
 
           <View className="bg-white p-2 rounded-xl space-y-2">
             <View>
@@ -583,7 +612,7 @@ const AppointmentSingle = (props) => {
                   valueField="value"
                   placeholder="Select mechanic"
                   searchPlaceholder="Search..."
-                  value={selectedMechanic}
+                  value={item?.mechanic?._id || selectedMechanic}
                   onChange={(mechanic) => {
                     setSelectedMechanic(mechanic.value);
                   }}
