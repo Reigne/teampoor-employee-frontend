@@ -1,35 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import {
-  Pressable,
-  Image,
-  Badge,
-  Select,
-  VStack,
-  CheckIcon,
-  ScrollView,
-} from "native-base";
-import {
-  ArrowDownTrayIcon,
-  BanknotesIcon,
-  ChevronDownIcon,
-  DocumentTextIcon,
-  MapPinIcon,
-  ShoppingBagIcon,
-  ShoppingCartIcon,
-  TruckIcon,
-  UserIcon,
-} from "react-native-heroicons/solid";
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { Image, CheckIcon, Modal } from "native-base";
+import { ArrowDownTrayIcon } from "react-native-heroicons/solid";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
 import baseURL from "../../assets/common/baseUrl";
 import Toast from "react-native-toast-message";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
 import mime from "mime";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const TaskSingle = (props) => {
   const item = props.route.params.item;
@@ -43,6 +32,7 @@ const TaskSingle = (props) => {
   const [image, setImage] = useState("");
   const [errors, setErrors] = useState({});
   const [token, setToken] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
 
   console.log("Route Params:", props.route.params);
   console.log("Item Data:", item);
@@ -161,6 +151,8 @@ const TaskSingle = (props) => {
     value: mechanic._id, // Assuming _id is the unique identifier for mechanics
     avatar: mechanic.avatar?.url || "", // Assuming _id is the unique identifier for mechanics
   }));
+
+  console.log("images", image);
 
   const renderMechanicItem = (mechanic) => {
     return (
@@ -330,7 +322,7 @@ const TaskSingle = (props) => {
               <Text className="text-zinc-700">Brand:</Text>
               <Text className="font-semibold">{item.brand}</Text>
             </View>
-{/* 
+            {/* 
             <View className="flex flex-row space-x-2 justify-between items-center">
               <Text className="text-zinc-700">Model:</Text>
               <Text className="font-semibold">{item.model}</Text>
@@ -460,20 +452,44 @@ const TaskSingle = (props) => {
           </View>
         </View>
       </View> */}
+      {item.mechanicProof && (
+        <View className="bg-white p-2 rounded-lg space-y-2">
+          <View>
+            <Text>Uploaded Inspection Report</Text>
+            <Text className="text-xs text-zinc-700">
+              Click to enlarge the image
+            </Text>
+          </View>
+
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Image
+              source={
+                item.mechanicProof.url
+                  ? { uri: item.mechanicProof.url }
+                  : require("../../assets/images/teampoor-default.png")
+              }
+              alt="inspection report"
+              style={{ width: 100, height: 100, margin: 1 }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+      )}
 
       <View className="bg-white p-2 rounded-lg space-y-2">
         <View>
           <Text className="text-xs">Upload the inspection report *</Text>
         </View>
 
-        {image.length > 0 && (
+        {image && (
           <View>
             <Image
               source={
-                image[0].uri
-                  ? { uri: image[0].uri }
+                image
+                  ? { uri: image }
                   : require("../../assets/images/teampoor-default.png")
               }
+              alt="inspection report"
               style={{ width: 100, height: 100, margin: 1 }}
               resizeMode="contain"
             />
@@ -499,6 +515,13 @@ const TaskSingle = (props) => {
           </View>
         </View>
 
+        <TouchableOpacity
+          className="p-3 bg-red-500 rounded-xl"
+          onPress={() => updateHandler()}
+        >
+          <Text className="text-white text-center">Upload</Text>
+        </TouchableOpacity>
+
         {status === "INPROGRESS" && (
           <TouchableOpacity
             className="bg-red-500 rounded-xl p-4"
@@ -508,6 +531,34 @@ const TaskSingle = (props) => {
           </TouchableOpacity>
         )}
       </View>
+
+      <Modal
+        isOpen={modalVisible}
+        transparent={true}
+        onClose={() => setModalVisible(false)}
+        backgroundColor="rgba(0, 0, 0, 0.5)"
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+            <Image
+              style={{ width: wp("100%"), height: hp("100%") }}
+              source={{
+                uri: item?.mechanicProof?.url
+                  ? item?.mechanicProof?.url
+                  : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
+              }}
+              alt="images"
+              resizeMode="contain"
+            />
+          </TouchableWithoutFeedback>
+        </View>
+      </Modal>
 
       <View className="pb-4" />
     </KeyboardAwareScrollView>
