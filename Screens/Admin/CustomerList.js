@@ -54,8 +54,8 @@ const CustomerList = ({ item, index, deleteUser, updateRole }) => {
               className="rounded"
               style={{ width: 34, height: 34 }}
               source={
-                item.image?.url
-                  ? { uri: item.image?.url }
+                item.avatar?.url
+                  ? { uri: item.avatar?.url }
                   : require("../../assets/images/default-profile.jpg")
               }
               resizeMode="contain"
