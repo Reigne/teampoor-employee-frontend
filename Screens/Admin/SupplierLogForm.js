@@ -57,15 +57,17 @@ const SupplierLogForm = () => {
   const [notes, setNotes] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState();
+  const [errors, setErrors] = useState({});
 
   useFocusEffect(
     useCallback(() => {
-      setLoading(true); // Start loading
+      // setLoading(true); // Start loading
 
       fetchProducts();
       fetchSupplier();
       setDate(new Date());
 
+      setLoading(false);
       return () => {
         setProducts([]);
         setSuppliers([]);
@@ -115,8 +117,8 @@ const SupplierLogForm = () => {
     stock: product.stock,
     brand: product.brand.name,
   }));
-  
-  console.log(products, 'products');
+
+  console.log(products, "products");
 
   const supplierData = suppliers.map((supplier) => ({
     label: `${supplier.firstname} ${supplier.lastname}`,
@@ -178,7 +180,9 @@ const SupplierLogForm = () => {
             }}
             alt="images"
           />
-          <Text style={styles.textItem}>{product.label} ({product.brand})</Text>
+          <Text style={styles.textItem}>
+            {product.label} ({product.brand})
+          </Text>
         </View>
         {/* {product.value === selectedMechanic && <CheckIcon size={3} />} */}
       </View>
@@ -225,7 +229,27 @@ const SupplierLogForm = () => {
 
   const formattedDate = new Date(date).toLocaleDateString(); // Format date as string
 
+  const validateForm = () => {
+    let errors = {};
+
+    if (!selectedSupplier) errors.selectedSupplier = "Supplier is required";
+    if (!invoiceId) errors.invoiceId = "Invoice I.D is required";
+    if (!formattedDate) errors.formattedDate = "Date delivery is required";
+
+    if (productList.length === 0)
+      errors.productList = "Please add at least one product";
+
+    setErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+
   const submitHandler = () => {
+    if (!validateForm()) {
+      setLoading(false);
+      return;
+    }
+
     const data = {
       supplier: selectedSupplier.value,
       products: productList.map((item) => ({
@@ -268,9 +292,9 @@ const SupplierLogForm = () => {
         Toast.show({
           type: "error",
           text1: "Error submitting supplier log",
-          text2: "An error occurred while submitting the supplier log. Please try again later.",
+          text2:
+            "An error occurred while submitting the supplier log. Please try again later.",
         });
-        
       });
   };
 
@@ -318,6 +342,12 @@ const SupplierLogForm = () => {
                 renderItem={renderSupplier}
               />
             </View>
+
+            {errors.selectedSupplier ? (
+              <Text className="text-sm text-red-500">
+                {errors.selectedSupplier}
+              </Text>
+            ) : null}
           </View>
 
           <View className="space-y-1">
@@ -331,6 +361,10 @@ const SupplierLogForm = () => {
               value={invoiceId}
               onChangeText={(text) => setInvoiceId(text)}
             />
+
+            {errors.invoiceId ? (
+              <Text className="text-sm text-red-500">{errors.invoiceId}</Text>
+            ) : null}
           </View>
 
           <View className="space-y-1">
@@ -348,6 +382,12 @@ const SupplierLogForm = () => {
                 className="text-black"
               />
             </TouchableOpacity>
+
+            {errors.formattedDate ? (
+              <Text className="text-sm text-red-500">
+                {errors.formattedDate}
+              </Text>
+            ) : null}
 
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
@@ -434,57 +474,73 @@ const SupplierLogForm = () => {
         </TouchableOpacity>
       </View>
 
-      <View className="bg-white p-3 rounded-xl space-y-3">
-        <View className="flex flex-row items-center">
-          <View className="w-8/12">
-            <Text className="text-xs font-semibold">Product</Text>
-          </View>
-          <View className="w-2/12 items-end">
-            <Text className="text-xs font-semibold">Price</Text>
-          </View>
-          <View className="w-2/12 items-end">
-            <Text className="text-xs font-semibold">Quantity</Text>
-          </View>
-        </View>
-
-        <View className="border-b border-zinc-200" />
-
-        <View className="space-y-1">
-          {productList.length > 0 ? (
-            <>
-              {productList.map((item, index) => (
-                <View key={index} className="flex flex-row items-center">
-                  <View className="w-8/12">
-                    <Text className="">{item.product.label} ({item.product.brand})</Text>
-                  </View>
-                  <View className="w-2/12 items-end">
-                    <Text className="">{item.price}</Text>
-                  </View>
-                  <View className="w-2/12 items-end">
-                    <Text className="">{item.quantity}</Text>
-                  </View>
-                </View>
-              ))}
-            </>
-          ) : (
-            <View className="flex-1 items-center justify-center">
-              <Text className="text-xs text-zinc-600">No product listed.</Text>
+      <View className="space-y-1">
+        <View
+          className={
+            errors.productList
+              ? "border border-red-500 bg-white p-3 rounded-xl space-y-3"
+              : "bg-white p-3 rounded-xl space-y-3"
+          }
+        >
+          <View className="flex flex-row items-center">
+            <View className="w-8/12">
+              <Text className="text-xs font-semibold">Product</Text>
             </View>
-          )}
-        </View>
+            <View className="w-2/12 items-end">
+              <Text className="text-xs font-semibold">Price</Text>
+            </View>
+            <View className="w-2/12 items-end">
+              <Text className="text-xs font-semibold">Quantity</Text>
+            </View>
+          </View>
 
-        <View className="border-b border-zinc-200" />
+          <View className="border-b border-zinc-200" />
 
-        <View className="flex flex-row justify-between items-center">
-          <Text className="font-semibold">Grand Total:</Text>
-
-          <Text className="font-semibold text-red-500">
-            {productList.reduce(
-              (acc, item) => acc + item.price * item.quantity,
-              0
+          <View className="space-y-1">
+            {productList.length > 0 ? (
+              <>
+                {productList.map((item, index) => (
+                  <View key={index} className="flex flex-row items-center">
+                    <View className="w-8/12">
+                      <Text className="">
+                        {item.product.label} ({item.product.brand})
+                      </Text>
+                    </View>
+                    <View className="w-2/12 items-end">
+                      <Text className="">{item.price}</Text>
+                    </View>
+                    <View className="w-2/12 items-end">
+                      <Text className="">{item.quantity}</Text>
+                    </View>
+                  </View>
+                ))}
+              </>
+            ) : (
+              <View className="flex-1 items-center justify-center">
+                <Text className="text-xs text-zinc-600">
+                  No product listed.
+                </Text>
+              </View>
             )}
-          </Text>
+          </View>
+
+          <View className="border-b border-zinc-200" />
+
+          <View className="flex flex-row justify-between items-center">
+            <Text className="font-semibold">Grand Total:</Text>
+
+            <Text className="font-semibold text-red-500">
+              {productList.reduce(
+                (acc, item) => acc + item.price * item.quantity,
+                0
+              )}
+            </Text>
+          </View>
         </View>
+
+        {errors.productList ? (
+          <Text className="text-sm text-red-500">{errors.productList}</Text>
+        ) : null}
       </View>
 
       <View className="bg-white p-3 rounded-xl space-y-3">
@@ -506,7 +562,9 @@ const SupplierLogForm = () => {
       </View>
 
       <TouchableOpacity
-        className="bg-red-500 p-3 rounded-xl"
+        className={
+          loading ? "bg-zinc-500 p-3 rounded-xl" : "bg-red-500 p-3 rounded-xl"
+        }
         onPress={() => submitHandler()}
       >
         <Text className="text-white text-center font-semibold">Submit</Text>
