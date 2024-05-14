@@ -68,6 +68,8 @@ const AppointmentList = ({ item }) => {
               ? "bg-blue-200 px-2 rounded"
               : status === "BACKJOBCOMPLETED"
               ? "bg-green-200 px-2 rounded"
+              : status === "DONE"
+              ? "bg-green-200 px-2 rounded"
               : "bg-zinc-200 px-2 rounded"
           }
         >
@@ -96,6 +98,8 @@ const AppointmentList = ({ item }) => {
                 : status === "BACKJOBCONFIRMED"
                 ? "text text-blue-800"
                 : status === "BACKJOBCOMPLETED"
+                ? "text text-green-800"
+                : status === "DONE"
                 ? "text text-green-800"
                 : ""
             }

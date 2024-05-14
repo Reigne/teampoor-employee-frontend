@@ -64,6 +64,8 @@ const TaskList = ({ item }) => {
                 ? "bg-yellow-200 px-2 rounded"
                 : status === "Pending"
                 ? "bg-yellow-200 px-2 rounded"
+                : status === "DONE"
+                ? "bg-green-200 px-2 rounded"
                 : "bg-zinc-200 px-2 rounded"
             }
           >
@@ -89,6 +91,8 @@ const TaskList = ({ item }) => {
                   ? "text text-yellow-800"
                   : status === "Pending"
                   ? "text text-yellow-800"
+                  : status === "DONE"
+                  ? "text text-green-800"
                   : ""
               }
             >
@@ -104,11 +108,11 @@ const TaskList = ({ item }) => {
             width: 74,
             height: 74,
           }}
-          source={{
-            uri: item.user.avatar.url
-              ? item.user.avatar.url
-              : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
-          }}
+          source={
+            item?.user?.avatar?.url
+              ? { uri: item?.user?.avatar?.url }
+              : require("../../assets/images/teampoor-default.png")
+          }
           alt="images"
         />
 

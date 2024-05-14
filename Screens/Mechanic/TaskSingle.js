@@ -90,7 +90,7 @@ const TaskSingle = (props) => {
     return Object.keys(errors).length === 0;
   };
 
-  const updateHandler = () => {
+  const uploadHandler = () => {
     if (!validateForm()) {
       // setLoading(false);
       return;
@@ -127,6 +127,34 @@ const TaskSingle = (props) => {
         .then((res) => {
           // Update the status state variable with the newly updated status
           setStatus(res.data.appointmentStatus?.pop()?.status);
+          Toast.show({
+            topOffset: 60,
+            type: "success",
+            text1: "Appointment Status Updated",
+            text2: `#${item._id} Appointment has been Updated`,
+          });
+        });
+    } catch (error) {
+      console.error(error);
+      // Handle errors, show an error toast, etc.
+      Toast.show({
+        topOffset: 60,
+        type: "error",
+        text1: "Something went wrong",
+        text2: "Please try again",
+      });
+    }
+  };
+
+  const updateTaskHandler = () => {
+    try {
+      axios
+        .put(`${baseURL}appointments/update/${item._id}`, {
+          status: "DONE",
+        })
+        .then((res) => {
+          // Update the status state variable with the newly updated status
+          setStatus(res.data.data.appointmentStatus?.pop()?.status);
           Toast.show({
             topOffset: 60,
             type: "success",
@@ -204,6 +232,8 @@ const TaskSingle = (props) => {
                 ? "bg-yellow-200 px-2 rounded"
                 : status === "NOSHOW"
                 ? "bg-red-200 px-2 rounded"
+                : status === "DONE"
+                ? "bg-green-200 px-2 rounded"
                 : "bg-zinc-200 px-2 rounded"
             }
           >
@@ -225,6 +255,8 @@ const TaskSingle = (props) => {
                   ? "text text-yellow-800"
                   : status === "NOSHOW"
                   ? "text text-red-800"
+                  : status === "DONE"
+                  ? "text text-green-800"
                   : ""
               }
             >
@@ -265,8 +297,8 @@ const TaskSingle = (props) => {
             height: 64,
           }}
           source={{
-            uri: item.user.avatar.url
-              ? item.user.avatar.url
+            uri: item.user?.avatar?.url
+              ? item.user?.avatar?.url
               : "https://i.pinimg.com/originals/40/57/4d/40574d3020f73c3aa4b446aa76974a7f.jpg",
           }}
           alt="images"
@@ -516,21 +548,23 @@ const TaskSingle = (props) => {
         </View>
 
         <TouchableOpacity
-          className="p-3 bg-red-500 rounded-xl"
-          onPress={() => updateHandler()}
+          className="p-3 bg-blue-500 rounded-xl"
+          onPress={() => uploadHandler()}
         >
           <Text className="text-white text-center">Upload</Text>
         </TouchableOpacity>
-
-        {status === "INPROGRESS" && (
-          <TouchableOpacity
-            className="bg-red-500 rounded-xl p-4"
-            onPress={() => updateHandler()}
-          >
-            <Text className="text-white font-semibold text-center">Done</Text>
-          </TouchableOpacity>
-        )}
       </View>
+
+      {status === "INPROGRESS" && (
+        <TouchableOpacity
+          className="bg-red-500 rounded-xl p-4"
+          onPress={() => updateTaskHandler()}
+        >
+          <Text className="text-white font-semibold text-center">
+            Done Task
+          </Text>
+        </TouchableOpacity>
+      )}
 
       <Modal
         isOpen={modalVisible}

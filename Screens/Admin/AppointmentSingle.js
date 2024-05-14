@@ -375,6 +375,8 @@ const AppointmentSingle = (props) => {
                     ? "bg-blue-200 px-2 rounded"
                     : status === "BACKJOBCOMPLETED"
                     ? "bg-green-200 px-2 rounded"
+                    : status === "DONE"
+                    ? "bg-green-200 px-2 rounded"
                     : "bg-zinc-200 px-2 rounded"
                 }
               >
@@ -401,6 +403,8 @@ const AppointmentSingle = (props) => {
                       : status === "BACKJOBCONFIRMED"
                       ? "text text-blue-800"
                       : status === "BACKJOBCOMPLETED"
+                      ? "text text-green-800"
+                      : status === "DONE"
                       ? "text text-green-800"
                       : ""
                   }
@@ -528,7 +532,7 @@ const AppointmentSingle = (props) => {
             </View>
           </View>
 
-          {status === "BACKJOBCONFIRMED" && (
+          {(status === "BACKJOBCONFIRMED" || status === "RESCHEDULED" )&& (
             <View className="bg-white p-2 rounded-lg space-y-2">
               <View>
                 <Text className="font-semibold">Select Date: </Text>
@@ -782,7 +786,7 @@ const AppointmentSingle = (props) => {
 
             <View className="border-b border-zinc-200" />
 
-            {!item?.parts ? (
+            {item?.parts ? (
               <View className="space-y-2">
                 <View className="space-y-1">
                   <View>
