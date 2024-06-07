@@ -532,7 +532,7 @@ const AppointmentSingle = (props) => {
             </View>
           </View>
 
-          {(status === "BACKJOBCONFIRMED" || status === "RESCHEDULED" )&& (
+          {(status === "BACKJOBCONFIRMED" || status === "RESCHEDULED") && (
             <View className="bg-white p-2 rounded-lg space-y-2">
               <View>
                 <Text className="font-semibold">Select Date: </Text>
@@ -743,6 +743,19 @@ const AppointmentSingle = (props) => {
                   maximumFractionDigits: 2,
                 })}
               </Text>
+            </View>
+
+            <View>
+              <TouchableOpacity
+                className="p-3 bg-green-500 rounded-lg block"
+                onPress={() =>
+                  navigation.navigate("AppointmentAddService", item)
+                }
+              >
+                <Text className="text-center text-white font-semibold">
+                  Add additional service
+                </Text>
+              </TouchableOpacity>
             </View>
             {/* list of services */}
           </View>

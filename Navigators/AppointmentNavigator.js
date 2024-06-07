@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Appointments from "../Screens/Admin/Appointments";
 import AppointmentSingle from "../Screens/Admin/AppointmentSingle";
 import AppointmentParts from "../Screens/Admin/AppointmentParts";
+import AppointmentAddService from "../Screens/Admin/AppointmentAddService";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,13 @@ function MyStack() {
       <Stack.Screen
         name="AppointmentParts"
         component={AppointmentParts}
+        options={{
+          title: false,
+        }}
+      />
+      <Stack.Screen
+        name="AppointmentAddService"
+        component={AppointmentAddService}
         options={{
           title: false,
         }}
