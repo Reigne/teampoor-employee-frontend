@@ -170,7 +170,7 @@ const AppointmentList = ({ item }) => {
               alt="images"
             />
 
-            <Text className="text-xs">{service.service.name}</Text>
+            <Text className="text-xs">{service?.service?.name}</Text>
           </View>
         ))}
       </View>
