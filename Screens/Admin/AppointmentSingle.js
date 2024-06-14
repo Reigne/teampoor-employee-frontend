@@ -720,12 +720,12 @@ const AppointmentSingle = (props) => {
                       numberOfLines={2}
                       ellipsizeMode="tail"
                     >
-                      {service.service.description}
+                      {service?.service?.description}
                     </Text>
                   </View>
                   <Text className="text-xs">
                     ₱
-                    {service.service.price?.toLocaleString(undefined, {
+                    {service?.service?.price?.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
