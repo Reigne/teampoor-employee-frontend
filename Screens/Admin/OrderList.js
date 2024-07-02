@@ -110,8 +110,8 @@ const OrderList = ({ item, updateStatus }) => {
                 </View>
 
                 <View className="flex-row mt-1">
-                  <Text className="font-bold">Order: #</Text>
-                  <Text>{item._id}</Text>
+                  <Text className="font-bold">Email: </Text>
+                  <Text>{item.user.email}</Text>
                 </View>
 
                 <View className="flex">
