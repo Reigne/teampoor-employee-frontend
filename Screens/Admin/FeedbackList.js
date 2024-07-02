@@ -49,7 +49,7 @@ const FeedbackList = ({ item }) => {
         <View className="space-y-1">
           {item.appointment?.appointmentServices?.map((service, index) => (
             <View className="bg-zinc-100 px-2 py-1 rounded-lg" key={index}>
-              <Text className="text-xs">{`\u2022 ${service.service.name}`}</Text>
+              <Text className="text-xs">{`\u2022 ${service?.service?.name}`}</Text>
             </View>
           ))}
         </View>
